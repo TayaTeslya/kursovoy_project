@@ -1,0 +1,34 @@
+package kursa4_console;
+import java.util.Scanner;
+
+public class App {
+
+	public static void main(String[] args) {
+		
+		// кол-во уравнений и неизвестных
+		System.out.print("Введите кол-во уравнений и неизвестных: ");
+		Scanner scanner = new Scanner(System.in);
+		int n = scanner.nextInt();
+		float[][] x = new float[n][n];
+		
+		// ввод коэффициентов при неизвестных
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.println("Введите коэффициент x" + j + " " + i + " уравнения");
+				x[i][j] = scanner.nextInt();
+				System.out.print(n);
+			}
+		}
+		
+		//вывод системы уравнений
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.println("Введите коэффициент x" + j + " " + i + " уравнения");
+				x[i][j] = scanner.nextInt();
+				System.out.print(n);
+			}
+		}
+		
+	}
+
+}

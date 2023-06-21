@@ -1,0 +1,13 @@
+package kursa4_console;
+import java.util.Scanner;
+
+public class App {
+
+	public static void main(String[] args) {
+		System.out.print("Введите кол-во уравнений и неизвестных: ");
+		Scanner scanner = new Scanner(System.in);
+		int n = scanner.nextInt();
+		System.out.print(n);
+	}
+
+}

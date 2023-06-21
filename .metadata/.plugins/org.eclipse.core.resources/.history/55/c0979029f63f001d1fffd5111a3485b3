@@ -1,0 +1,33 @@
+package kursa4_console;
+
+public class SystemOfEquations {
+	
+	private double[][] x;
+	private double[] b;
+	
+	SystemOfEquations(double[][] x, double[] b) {
+		this.x = x;
+		this.b = b;
+	}
+	
+	public double[][] getX() {
+		int n = 2;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.print(this.x[i][j] + "x" + j);
+				if (j + 1 == n) {
+					System.out.print(" = ");
+					break;
+				}
+				System.out.print(" + ");
+			}
+			System.out.println(this.b[i]);
+		}
+		return this.x;
+	}
+	
+	public double[] getB() {
+		return this.b;
+	}
+	
+}

@@ -1,0 +1,96 @@
+package kursa4_console;
+import java.util.Scanner;
+
+public class App {
+	
+	public static void menu() {
+		
+		Scanner scanner = new Scanner(System.in);
+		int m = 0;
+		
+		while (m != 3) {
+			System.out.println("------------------------------------");
+			System.out.println("Меню:");
+			System.out.println("------------------------------------");
+			System.out.println("1 - Решить СЛУ методом Гаусса");
+			System.out.println("2 - Решить СЛУ методом квадратных корней");
+			System.out.println("3 - Выйти");
+			System.out.println("------------------------------------");
+			m = scanner.nextInt();
+		
+			switch (m) {
+			case 1: 
+				methodGauss();
+				break;
+			case 2: 
+				methodSquareRoots();
+				break;
+			case 3: 
+				System.out.println("До свидания!");
+				break;
+			default:
+				System.out.println("Пожалуйста, введите нужный вам пункт");
+			}
+			System.out.println("\n");
+		}
+		
+	}
+
+	public static void methodGauss() {
+		
+		SystemOfEquations systemOfEquations = inputEquations();
+		
+	}
+	
+	public static void methodSquareRoots() {
+		
+		SystemOfEquations systemOfEquations = inputEquations();
+
+		// вывод системы уравнений
+		
+		for (int i = 0; i < systemOfEquations.getX().length; i++) {
+			for (int j = 0; j < systemOfEquations.getX().length; j++) {
+				System.out.print(systemOfEquations.getX()[i][j] + "x" + j);
+				if (j + 1 == systemOfEquations.getX()[i][j]) {
+					System.out.print(" = ");
+					break;
+				}
+				System.out.print(" + ");
+			}
+			System.out.println(systemOfEquations.getB()[i]);
+		}
+		
+	}
+	
+	public static SystemOfEquations inputEquations() {
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		// кол-во уравнений и неизвестных
+		System.out.print("Введите кол-во уравнений и неизвестных: ");
+		
+		int n = scanner.nextInt();
+		double[][] x = new double[n][n];
+		double[] b = new double[n];
+		
+		// ввод коэффициентов при неизвестных
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.println("Введите коэффициент x" + j + " " + i + " уравнения: ");
+				x[i][j] = scanner.nextFloat();
+			}
+			System.out.println("Введите свободный член уравнения (после =): ");
+			b[i] = scanner.nextFloat();
+		}
+		
+		return new SystemOfEquations(x, b);
+				
+	}
+	
+	public static void main(String[] args) {
+		
+		menu();
+		
+	}
+
+}

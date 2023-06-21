@@ -1,0 +1,12 @@
+package kursa4_console;
+import java.util.Scanner;
+
+public class App {
+
+	public static void main(String[] args) {
+		System.out.print("Введите кол-во уравнений: ");
+		Scanner n = new Scanner();
+
+	}
+
+}

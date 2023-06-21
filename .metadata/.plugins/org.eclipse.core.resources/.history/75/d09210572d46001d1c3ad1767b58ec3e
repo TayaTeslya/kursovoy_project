@@ -1,0 +1,424 @@
+package kursa4_console;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class App {
+	
+	// Main - главная ф-ция приложения
+	public static void main(String[] args) {
+		
+		menu();
+		
+	}
+	
+	
+	// Меню
+	public static void menu() {
+		
+		Scanner scanner = new Scanner(System.in); // Объект сканер для ввода данных
+		String m = "0"; // Переменная для выбора пункта меню
+		
+		while (m != "3") { // Пока не выбран пункт меню "Выйти"
+			System.out.println("------------------------------------");
+			System.out.println("Меню:");
+			System.out.println("------------------------------------");
+			System.out.println("1 - Решить СЛУ методом Гаусса");
+			System.out.println("2 - Решить СЛУ методом квадратных корней");
+			System.out.println("3 - Выйти");
+			System.out.println("------------------------------------");
+			m = scanner.nextLine(); // Ввод пункта меню
+			switch (m) { // Вызоа функций по выбранному пункту меню
+				case "1": // Метод Гаусса
+					method("methodGauss"); 
+					break;
+				case "2":  // Метод квадратных корней
+					method("methodSquareRoots");
+					break;
+				case "3": // Выход из приложения
+					System.out.println("До свидания!");
+					m = "3"; // Для обновления переменной из-за различия типов сканера и условия цикла
+					System.exit(0); // Закрытие приложение с ошибкой 0 (нет ошибок)
+					break;
+				default: // При вводе символа, не указанного в пунктах меню
+					System.out.println("Пожалуйста, введите нужный вам пункт");
+			}
+			System.out.println("\n");
+		}
+		
+	}
+	
+	
+	// Решение СЛУ
+	public static void method(String method) {
+		
+		SystemOfEquations systemOfEquations = inputEquations(); // ввод коэффициентов системы уравнений
+		
+		System.out.println("Полученная система линейных уравнений: "); // вывод системы уравнений
+		for (int i = 0; i < systemOfEquations.getX().length; i++) {
+			for (int j = 0; j < systemOfEquations.getX().length; j++) {
+				System.out.print(systemOfEquations.getX()[i][j] + "x" + j);
+				if (j + 1 == systemOfEquations.getX().length) {
+					System.out.print(" = ");
+					break;
+				}
+				System.out.print(" + ");
+			}
+			System.out.println(systemOfEquations.getB()[i]);
+		}
+		
+		// Решение СЛУ выбранным методом
+		if (method == "methodGauss") { // Метод Гаусса
+			methodGauss(systemOfEquations);
+		}
+		else { // Метод квадратных корней
+			methodSquareRoots(systemOfEquations);
+		}
+		
+		Scanner scanner = new Scanner(System.in); // Объект сканер для ввода данных
+		String m = ""; // Переменная для возвращения в меню
+		while (m == "") {
+			System.out.print("\n" + "Введите любой символ для завершения: ");
+			m = scanner.nextLine();
+		}
+		System.out.println("\n\n\n\n\n");
+		
+	}
+	
+	
+	// Ввод СЛУ
+	public static SystemOfEquations inputEquations() {
+		
+		Scanner scanner = new Scanner(System.in); // Объект сканер для ввода данных
+		int n = 0; // кол-во уравнений и неизвестных
+		
+		while (n < 2) { // Пока не будет введено кол-во неизвестных больше 1
+			System.out.print("Введите кол-во уравнений и неизвестных (больше 1): ");
+			try {
+				n = Integer.valueOf(scanner.nextLine());
+			} catch (Exception e) { }
+		}
+		
+		double[][] x = new double[n][n]; // Матрица неизвестных
+		double[] b = new double[n]; // Матрица свободных членов
+		
+		// Ввод коэффициентов
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.print("Введите коэффициент x" + j + " " + i + " уравнения: ");
+				x[i][j] = scanner.nextDouble();
+			}
+			System.out.print("Введите свободный член уравнения (после =): ");
+			b[i] = scanner.nextDouble();
+		}
+		
+		return new SystemOfEquations(x, b); // Возвращаем объект "СЛУ" с матрицей неизвестных и матрицей свободных членов
+				
+	}
+
+	
+	// Метод Гаусса
+	public static void methodGauss(SystemOfEquations systemOfEquations) {
+		
+			System.out.println("Метод Гаусса: " + "\n");
+			
+			// Прямой проход
+			SystemOfEquations trilangularMatrix = triangularMatrixByGaussMethod(systemOfEquations);
+			for (int i = 0; i < trilangularMatrix.getX().length; i++) { // вывод верхнетреугольной матрицы
+				
+				for (int j = 0; j < trilangularMatrix.getX().length; j++) {
+					
+					System.out.print(trilangularMatrix.getX()[i][j] + " ");
+					
+				}
+				
+				System.out.println("= " + trilangularMatrix.getB()[i]);
+				
+			}
+			
+			// Обратный проход
+			
+			double[] x = new double[trilangularMatrix.getX().length];
+			Arrays.fill(x, 0); // заполнение массива нулями
+			
+			for (int i = trilangularMatrix.getX().length - 1; i >= 0; i--) {
+				
+				double[] str = new double[trilangularMatrix.getX().length];
+				double b = trilangularMatrix.getB()[i];
+				
+				for (int j = 0; j < trilangularMatrix.getX().length; j++) {
+					
+					str[j] = trilangularMatrix.getX()[i][j];
+					
+				}
+				
+				x[i] = reverseGauss(str, b, x, i);
+				
+			}
+			
+			System.out.println("Найденные неизвестные: "); // вывод найденных неизвестных
+			for (int i = 0; i < x.length; i++) {
+				
+				System.out.println("x" + i + " = " + x[i]);
+				
+			}
+			
+	}
+	
+	
+	// Приведение к вехнетреугольной матрице методом Гаусса (прямой проход)
+	public static SystemOfEquations triangularMatrixByGaussMethod(SystemOfEquations systemOfEquations) {
+		
+		double[][] x = systemOfEquations.getX().clone();
+		double[] b = systemOfEquations.getB().clone();
+		
+		// следующие строки изменяем по следующему принципу (пример на 3 строчке):
+		// 1) Умножаем первую строку на первый коэффициент видоизменяемой строки (при этом сама строчка не меняется)
+		// 2) Вычитаем видоизменяемую строку из полученной, таким образом первый коэффициент видоизменяемой строки становится равным 0
+		// 3) Дальше умножаем вторую строку на второй коэф видоизменяемой и вычитаем видоизменяемую, таким образом получаем 2 коэф равный 0
+		// 4) Делим всю видоизменяемую строку на её третий коэф, благодаря чему третий коэф = 1
+		// перестановка строк
+		// ищем в какой строке самый максимальный элемент стоблца той диагонали, которую мы ищем
+		// перемещаем на верх
+		// учитываем когда нет решений
+		
+		boolean breakOrNot = false;
+		int[] max = new int[2]; // 0 - i; 1 - j
+		
+		for (int j = 0; j < x.length; j++) {
+			
+			max[0] = j; // ставим изначальный максимальный элемент - диагональный
+			max[1] = j;
+			
+			for (int i = j; i < x.length; i++) {
+				
+				System.out.print(x[i][j] + " ");
+				
+				if (Math.abs(x[i][j]) > Math.abs(x[max[0]][max[1]])) {
+					
+					max[0] = i;
+					
+				}
+				
+			}
+			
+			System.out.println("\n" + x[max[0]][max[1]]);
+			
+			if (x[max[0]][max[1]] == 0) {
+				
+				System.out.println("x" + j + " неизвестный невозможно найти из данной системы линейных уравнений");
+				breakOrNot = true;
+				break;
+				
+			}
+			
+			if (max[0] != max[1]) { // если i и j не совпадают, то максимальный элемент стоблца находится не на диагонали
+				
+				double dop = b[max[0]]; // max[0] - строка с максимумом
+				b[max[0]] = b[j]; // j - строка с диагональю 
+				b[j] = dop;
+				
+				for (int i = 0; i < x.length; i++) { // i - номер столбца
+					
+					dop = x[j][i];
+					x[j][i] = x[max[0]][i];
+					x[max[0]][i] = dop;
+					
+				}
+				
+			}
+			
+			for (int i = 0; i < x.length; i++) {
+				
+				for (int ii = 0; ii < x.length; ii++) {
+					
+					System.out.print(x[i][ii] + " ");
+					
+				}
+				
+				System.out.println("| " + b[i]);
+				
+			}
+			
+			System.out.println("");
+			
+		}
+		
+		if (!breakOrNot) {
+			
+			double k;
+			
+			for (int i = 0; i < x.length; i++) {
+				
+				for (int l = 0; l < i; l++) { // проходим по каждому элементу видоизменяемой строки до диагональной
+					
+					k = x[i][l];
+					
+					for (int j = 0; j < x.length; j++) {
+						
+						x[i][j] = x[l][j] * k - x[i][j]; // вычитаем строчки
+						
+					}
+					
+					b[i] = b[l] * k - b[i];
+					
+				}
+				
+				if (x[i][i] != 0) {
+					
+					k = x[i][i];
+					
+					for (int j = i; j < x.length; j++) {
+						
+						x[i][j] /= k;
+						
+					}
+					
+					b[i] /= k;
+					
+				}
+				
+			}	
+			
+			return new SystemOfEquations(x, b);
+			
+		}
+		else {
+			
+			System.out.println("Найти все неизвестные в данной СЛУ нельзя с помощью метода Гаусса.");
+			return new SystemOfEquations(x, b);
+			
+		}
+		
+	}
+		
+	
+	// Нахождение неизветных Методом Гаусса (обратный проход)
+	public static double reverseGauss(double[] str, double b, double[] k, int i) {
+		
+		double x = b;
+		
+		for (int j = 0; j < str.length; j++) {
+			
+			if (j != i) {
+				
+				x -= str[j] * k[j];
+				
+			}
+			
+		}
+		
+		return x;
+		
+	}
+	
+	
+	// Метод квадратных корней
+	public static void methodSquareRoots(SystemOfEquations systemOfEquations) {
+		
+		System.out.println("Метод квадратных корней: " + "\n");
+		
+		// Проверка на симметричность матриц
+		for (int i = 0; i < systemOfEquations.getX().length; i++) {
+			
+			if (systemOfEquations.getX()[i][systemOfEquations.getX().length - 1 - i] != 
+					systemOfEquations.getX()[systemOfEquations.getX().length - 1 - i][i]) {
+				
+				System.out.println("Матрица нессиметричная,  метод квадратных корней не подходит.");
+				return;
+				
+			}
+			
+		}
+		
+		//Нахождение определителя матрицы 
+		
+		double det = recursiveDet(systemOfEquations.getX());
+		
+		if (det != 0) {
+			
+			
+			
+		}
+		else {
+			
+			System.out.println("Определитель матрицы данной СЛУ равен 0");
+			System.out.println("СЛУ имеет несколько решений");
+			System.out.println("Метод квадратных корней не подходит");
+			
+		}
+		
+	}
+	
+	
+	// Нахождение определителя матрица методом понижения порядка
+	public static double recursiveDet(double[][] x) {
+		
+		double det = 0;
+		double dopDet;
+		
+		if (x.length == 2) {
+			
+			dopDet = findDet(x[0][0], x[1][1], x[0][1], x[1][0]);
+			return dopDet; // выход из процедуры
+			
+		}
+		else {
+			
+			for (int k = 0; k < x.length; k++) {
+				
+				if (k % 2 == 0 || k == 0) {
+					
+					dopDet = x[k][0]; // то, что умножается на определитель минора матрицы
+					
+				}
+				else {
+					
+					dopDet = -x[k][0];
+					
+				}
+				
+				double[][] dopX = new double[x.length - 1][x.length - 1]; // минорная матрицы
+				int ii = 0;
+				int jj = 0;
+				
+				for (int i = 0; i < x.length; i++) { // сохранение минора матрицы
+					
+					jj = 0;
+					
+					if (i != k) { // если не строка с коэффициентом
+						
+						for (int j = 1; j < x.length; j++) {
+							
+							dopX[ii][jj] = x[i][j];
+							jj++;
+							
+						}
+						
+						ii++;
+						
+					}
+					
+				}
+				
+				dopDet *= recursiveDet(dopX);
+				det += dopDet;
+				
+			}
+			
+		}
+		
+		return det;
+		
+	}
+	
+	
+	// Нахождение определителя матрицы 2х2
+	public static double findDet(double a, double c, double b, double d) {
+		
+		double det = a * c - d * b;
+		
+		return det;
+		
+	}
+
+}

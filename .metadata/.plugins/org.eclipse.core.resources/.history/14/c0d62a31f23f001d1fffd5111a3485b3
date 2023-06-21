@@ -1,0 +1,6 @@
+package kursa4_console;
+
+public class systemOfEquations {
+	float[][] x = new float[n][n];
+	float[] b = new float[n];
+}

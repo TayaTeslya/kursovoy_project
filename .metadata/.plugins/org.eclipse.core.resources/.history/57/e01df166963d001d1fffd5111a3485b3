@@ -1,0 +1,10 @@
+package kursa4_console;
+
+public class App {
+
+	public static void main(String[] args) {
+		
+
+	}
+
+}

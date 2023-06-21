@@ -1,0 +1,55 @@
+package kursa4_console;
+import java.util.Scanner;
+
+public class App {
+	
+	public static int menu() {
+		System.out.println("------------------");
+		System.out.println("Меню:");
+		System.out.println("------------------");
+		System.out.println("1 - Решить СЛУ методом Гаусса");
+		System.out.println("2 - Решить СЛУ методом квадратных корней");
+		System.out.println("3 - Выйти");
+		Scanner scanner = new Scanner(System.in);
+		int m = scanner.nextInt("");
+		System.out.println("------------------");
+		return 0;
+	}
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		menu();
+		// кол-во уравнений и неизвестных
+		System.out.print("Введите кол-во уравнений и неизвестных: ");
+		
+		int n = scanner.nextInt();
+		float[][] x = new float[n][n];
+		float[] b = new float[n];
+		
+		// ввод коэффициентов при неизвестных
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.println("Введите коэффициент x" + j + " " + i + " уравнения: ");
+				x[i][j] = scanner.nextFloat();
+			}
+			System.out.println("Введите свободный член уравнения (после =): ");
+			b[i] = scanner.nextFloat();
+		}
+		
+		
+		// вывод системы уравнений
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.print(x[i][j] + "x" + j);
+				if (j + 1 == n) {
+					System.out.print(" = ");
+					break;
+				}
+				System.out.print(" + ");
+			}
+			System.out.println(b[i]);
+		}
+		
+	}
+
+}

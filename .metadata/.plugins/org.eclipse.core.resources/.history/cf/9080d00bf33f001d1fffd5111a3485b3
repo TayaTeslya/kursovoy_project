@@ -1,0 +1,8 @@
+package kursa4_console;
+
+public class SystemOfEquations {
+	
+	private double[][] x;
+	private double[] b;
+	
+}

@@ -1,0 +1,17 @@
+package kursa4_console;
+
+public class SystemOfEquations {
+	
+	private double[][] x;
+	private double[] b;
+	
+	SystemOfEquations(double[][] x, double[] b) {
+		this.x = x;
+		this.b = b;
+	}
+	
+	public static double[][] getX() {
+		return x;
+	}
+	
+}
